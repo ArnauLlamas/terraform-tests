@@ -59,7 +59,12 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      # Only runs in main
+      - run: |
+          echo "${{ ! contains(steps.plan.outputs.plan, 'No changes.') }}"
+          echo "----"
+          echo "${{ steps.plan.outputs.plan }}"
+
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push' && ! contains(steps.plan.outputs.plan, 'No changes. Your infrastructure matches the configuration')
         run: terraform apply -auto-approve -input=false
