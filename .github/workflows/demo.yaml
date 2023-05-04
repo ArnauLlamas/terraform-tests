@@ -59,11 +59,11 @@ jobs:
         run: exit 1
 
       - run: |
-          echo "${{ ! contains(steps.plan.outputs.plan, 'No changes.') }}"
+          echo "${{ ! contains(steps.plan.outputs.stdout, 'No changes.') }}"
           echo "----"
-          echo "${{ steps.plan.outputs.plan }}"
+          echo "${{ steps.plan.outputs.stdout }}"
 
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && ! contains(steps.plan.outputs.plan, 'No changes. Your infrastructure matches the configuration')
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && ! contains(steps.plan.outputs.stdout, 'No changes. Your infrastructure matches the configuration')
         run: terraform apply -auto-approve -input=false
